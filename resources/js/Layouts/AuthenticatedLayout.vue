@@ -66,6 +66,10 @@ const sidebarClasses = computed(() => {
         </div>
 
         <div>
+            <a :href="route('equipe.create')">Créer</a>
+        </div>
+
+        <div>
             <button type="button" @click="toggleUserDropdown"
                 class="bg-blue-200 flex items-center justify-center border w-[2.5rem]  h-[2.5rem] mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
                 <span class="font-bold text-xl" >{{ $page.props.auth.user.name[0] }}</span>
@@ -148,7 +152,9 @@ const sidebarClasses = computed(() => {
 
 
     <!-- Page Content -->
-    <main>
-        <slot />
-    </main>
+    <div class="p-4 ml-[15rem]">
+        <div class="p-4 border-gray-200 rounded-lg mt-14 ">
+            <slot />
+        </div>
+    </div>
 </template>

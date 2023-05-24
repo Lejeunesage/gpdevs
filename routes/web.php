@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -19,11 +20,15 @@ use Inertia\Inertia;
 
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/dashboard', [HomeController::class, 'dataconnect'])->name('dataconnect');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Equipe
+Route::get('/equipe/create', [EquipeController::class, 'create'])->name('equipe.create')->middleware('auth');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
