@@ -19,7 +19,7 @@ use Inertia\Inertia;
 
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/dataconnect', [HomeController::class, 'dataconnect'])->name('dataconnect');
+Route::get('/dashboard', [HomeController::class, 'dataconnect'])->name('dataconnect');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
