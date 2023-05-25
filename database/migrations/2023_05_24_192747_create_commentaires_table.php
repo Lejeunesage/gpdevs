@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('commentaires', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tache_id')->constrained('taches')->onUpdate('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onUpdate('cascade');
+            $table->longText('contenu');
             $table->timestamps();
         });
     }

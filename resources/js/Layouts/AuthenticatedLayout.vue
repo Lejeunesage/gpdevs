@@ -66,10 +66,6 @@ const sidebarClasses = computed(() => {
         </div>
 
         <div>
-            <a :href="route('equipe.create')">Créer</a>
-        </div>
-
-        <div>
             <button type="button" @click="toggleUserDropdown"
                 class="bg-blue-200 flex items-center justify-center border w-[2.5rem]  h-[2.5rem] mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
                 <span class="font-bold text-xl" >{{ $page.props.auth.user.name[0] }}</span>
@@ -90,6 +86,8 @@ const sidebarClasses = computed(() => {
                 }}</span>
             </div>
             <ul class="py-2" aria-labelledby="user-menu-button">
+                
+           
                 <li>
                     <a href="#"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Tableau
@@ -106,7 +104,7 @@ const sidebarClasses = computed(() => {
                 </li>
 
                 <li>
-                    <a href="#"
+                    <a :href="route('logout')"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Déconnexion</a>
                 </li>
             </ul>
@@ -118,31 +116,29 @@ const sidebarClasses = computed(() => {
     <aside id="logo-sidebar" :class="sidebarClasses" aria-label="Sidebar">
         <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800 ">
             <ul class="space-y-2 font-medium">
+              
                 <li>
-                    <a href="#"
+                    <a :href="route('equipe.create')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <svg aria-hidden="true"
-                            class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                            <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                        </svg>
+                        <Icons name="add" />
+                        <span class="ml-3 hidden sm:flex">Créer nouvelle equipe</span>
+                    </a>
+                </li>
+                <li>
+                    <a :href="route('workplace.index')"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <Icons name="diagramm" />
                         <span class="ml-3 hidden sm:flex">Espace de travail</span>
                     </a>
                 </li>
                 <li>
                     <a href="#"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <svg aria-hidden="true"
-                            class="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                            fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
-                            </path>
-                        </svg>
-                        <span class="flex-1 ml-3 whitespace-nowrap hidden sm:flex">Kanban</span>
-                        <span
-                            class="inline-flex hidden sm:flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
+                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <Icons name="kamban" />
+                    
+                    <span class="flex-1 ml-3 whitespace-nowrap hidden sm:flex">Kanban</span>
+                    <span
+                    class="inline-flex hidden sm:flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
                     </a>
                 </li>
 

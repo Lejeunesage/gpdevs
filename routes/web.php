@@ -28,6 +28,11 @@ Route::get('/dashboard', function () {
 
 // Equipe
 Route::get('/equipe/create', [EquipeController::class, 'create'])->name('equipe.create')->middleware('auth');
+Route::post('/equipe/store', [EquipeController::class, 'store'])->name('equipe.store')->middleware('auth');
+Route::post('/equipe/ajoutMembre', [EquipeController::class, 'ajoutMembre'])->name('equipe.ajoutMembre')->middleware('auth');
+
+// Espace de travail
+Route::get('/workplace/index', [EquipeController::class, 'index'])->name('workplace.index')->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {

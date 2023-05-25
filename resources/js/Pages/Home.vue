@@ -43,7 +43,7 @@ const closeMenu = () => {
 <template>
     <Head title="Home" />
 
-    <nav class="shadow-lg z-99 fixed top-0 left-0 right-0 bg-white ">
+    <nav class="shadow-lg z-50 fixed top-0 left-0 right-0 bg-white ">
         <div class="container mx-auto relative flex justify-between items-center px-5 md:px-0 h-20">
             <div>
                 <Link href="/">

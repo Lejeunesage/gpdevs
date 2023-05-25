@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('membre_equipes', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('equipe_id')->constrained('equipes')->onUpdate('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->enum('role', ['Propriétaire', 'Collaborateur']);
             $table->timestamps();
         });
     }

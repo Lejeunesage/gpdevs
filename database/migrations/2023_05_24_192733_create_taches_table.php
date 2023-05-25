@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('taches', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->longText('description');
+            $table->integer('delais');
+            $table->foreignId('equipe_id')->constrained('equipes')->onUpdate('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onUpdate('cascade');
+            $table->timestamp('date_heure_livraison');
+            $table->enum('etat', ['A faire', 'En cours', 'En test', 'Erronée', 'Effectuée']);
+            $table->enum('priorite', ['Haute', 'Moyenne', 'Basse']);
             $table->timestamps();
         });
     }
