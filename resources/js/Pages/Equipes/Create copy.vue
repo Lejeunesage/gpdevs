@@ -2,7 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import Icons from '@/Components/Icons/Icons.vue'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
-import { ref, onMounted, reactive, watch, computed } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import { router } from '@inertiajs/vue3'
 import axios from 'axios';
 
@@ -23,7 +23,7 @@ const createTeam = () => {
             success.value = response.data.success;
             error.value = response.data.error;
             equipe_id.value = response.data.equipe_id;
-            console.log(response.data.users);
+            console.log(show.value);
 
 
         })
@@ -35,12 +35,12 @@ function recupererLignesSelectionnees() {
     const lignes = [];
     lignesSelectionnees.value.forEach((index) => {
         lignes.push(users.value[index].id);
-
+      
     });
 
     axios.post('/equipe/ajoutMembre', {
         idMembres: lignes,
-        equipe_id: equipe_id.value
+        equipe_id:  equipe_id.value
 
     })
         .then((response) => {
@@ -66,62 +66,7 @@ onMounted(() => {
     }
 })
 
-const searchTerm = ref('');
-const idMembres = ref('');
-const members = ref([]);
 
-watch(searchTerm, () => {
-    searchMembers();
-});
-
-const searchMembers = () => {
-    axios.post('/search-members', { searchTerm: searchTerm.value })
-        .then(response => {
-            members.value = response.data;
-            console.log(members.value);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    };
-    
-    const filteredMembers = computed(() => {
-        if (!searchTerm.value) {
-            return [];
-        }
-        return members.value;
-    });
-    
-    const selectMember = (id) => {
-        console.log(id);
-        axios.post('/select-members', { id: id })
-            .then(response => {
-                searchTerm.value = response.data[0].name;
-                idMembres.value = response.data[0].id;
-              
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    
-};
-
-const addMember = () => {
-    // Récupérer l'id et l'email du membre sélectionné
-    axios.post('/equipe/ajoutMembre', {
-        idMembres: idMembres.value,
-        equipe_id:  equipe_id.value
-
-    })
-        .then((response) => {
-            searchTerm.value = ''
-            console.log(response);
-            success.value = response.data.success;
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-};
 
 </script>
 <template>
@@ -156,9 +101,9 @@ const addMember = () => {
         </div>
 
         <div class="container mx-auto px-4">
-            <h1 class="text-3xl font-bold mb-6">Créer un projet</h1>
+            <h1 class="text-3xl font-bold mb-6">Créer une équipe</h1>
             <div class="max-w-lg ">
-                <label for="teamName" class="block text-gray-700">Nom du projet:</label>
+                <label for="teamName" class="block text-gray-700">Nom de l'équipe:</label>
                 <div class="flex items-center gap-5">
                     <input type="text" id="teamName" v-model="teamName" required
                         class="w-full px-4 py-2 border border-gray-300 rounded">
@@ -170,19 +115,33 @@ const addMember = () => {
 
         <div v-if="show" class="container mx-auto px-4 mt-5">
             <h2 class="text-xl font-bold mb-4">Ajouter des membres</h2>
-
-            <div>
-                <div class="flex gap-5">
-                    <input class=" px-4 py-2 border border-gray-300 rounded" v-model="searchTerm" type="search" placeholder="Rechercher un membre">
-                    <button class="px-4 py-2  bg-green-500 text-white rounded" @click="addMember()">Ajouter</button>
+            <input placeholder="Rechercher par email" class=" px-4 h-8 shadow border-gray-300 rounded" type="search" name=""
+                id="">
+            <div class="mb-4 flex flex-col h-20 w-96">
+                <div class="bg-white rounded-md shadow overflow-x-auto h-96 overflow-y-scroll">
+                    <table class="w-full whitespace-nowrap text-sm text-left text-gray-500">
+                        <thead class=" rounded-md shadow h-10 text-left sticky top-0 z-10 bg-white">
+                            <tr class="text-center">
+                                <th></th>
+                                <th class="pr-40">Nom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(user, index) in users" :key="index"
+                                class="border-b hover:bg-[#dfe3ff96] cursor-pointer">
+                                <td class="font-bold px-6 py-1">
+                                    <input type="checkbox" :value="index" v-model="lignesSelectionnees">
+                                </td>
+                                <td class="font-bold px-6 py-2">
+                                    {{ user.name }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <ul>
-                    <li class="cursor-pointer" v-if="filteredMembers.length > 0" @click="selectMember(filteredMembers[0].id)">
-                        {{ filteredMembers[0].name }}
-                    </li>
-                </ul>
             </div>
-
+            <button type="button" @click="recupererLignesSelectionnees"
+                class="px-4 py-2 bg-green-500 text-white rounded">Ajouter</button>
         </div>
 
     </AuthenticatedLayout>

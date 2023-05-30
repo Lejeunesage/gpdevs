@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignId('equipe_id')->constrained('equipes')->onUpdate('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onUpdate('cascade');
             $table->timestamp('date_heure_livraison');
-            $table->enum('etat', ['A faire', 'En cours', 'En test', 'Erronée', 'Effectuée']);
+            $table->unsignedBigInteger('colonne_id');
+            $table->foreign('colonne_id')->references('id')->on('colonnes');                            
             $table->enum('priorite', ['Haute', 'Moyenne', 'Basse']);
             $table->timestamps();
         });

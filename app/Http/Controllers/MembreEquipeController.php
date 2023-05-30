@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MembreEquipe;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MembreEquipeController extends Controller
@@ -10,10 +11,31 @@ class MembreEquipeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    public function searchMembers(Request $request)
     {
-        //
+        $searchTerm = $request->input('searchTerm');
+
+        $results = User::where('email', 'LIKE', '%' . $searchTerm . '%')
+            ->get();
+
+        // dd($results);
+
+        return response()->json($results);
     }
+
+
+    public function selectMember(Request $request)
+    {
+        $id = $request->id;
+
+        $results = User::where('id', $id)->get();
+
+        // dd($results);
+
+        return response()->json($results);
+    }
+
 
     /**
      * Show the form for creating a new resource.

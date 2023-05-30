@@ -72,7 +72,7 @@ class EquipeController extends Controller
 
             if ($existingTeam) {
                 // Une équipe avec le même nom existe déjà, envoyer un message d'erreur
-                return response(['error' => 'Une equipe existe déja avec le mème nom.']);
+                return response(['error' => 'Un projet existe déja avec le mème nom.']);
             } else {
 
 
@@ -96,7 +96,7 @@ class EquipeController extends Controller
                     'users' => $users,
                     'show' => 'true',
                     'equipe_id' => $create_equipe->id,
-                    'success' => 'Equipe créer avec succès.'
+                    'success' => 'Projet créer avec succès.'
                 ]);
             }
         } catch (\Throwable $th) {
@@ -112,16 +112,17 @@ class EquipeController extends Controller
     {
         $idMembres = $request->idMembres;
         $equipe_id = $request->equipe_id;
-
-        foreach ($idMembres as $key => $value) {
-            
+      
             MembreEquipe::create([
                 'equipe_id' =>  $equipe_id,
-                'user_id' => $value,
+                'user_id' => $idMembres,
                 'role' => 'Collaborateur'
             ]);
-        }
-        return Inertia::render('Equipes/Create');
+        
+        // Envoyer une réponse de succès si nécessaire
+        return response([
+            'success' => 'Un membre ajouté avec succès.'
+        ]);
     }
 
     /**

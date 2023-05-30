@@ -121,7 +121,7 @@ const sidebarClasses = computed(() => {
                     <a :href="route('equipe.create')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                         <Icons name="add" />
-                        <span class="ml-3 hidden sm:flex">Créer nouvelle equipe</span>
+                        <span class="ml-3 hidden sm:flex">Créer nouveau projet</span>
                     </a>
                 </li>
                 <li>
@@ -132,7 +132,7 @@ const sidebarClasses = computed(() => {
                     </a>
                 </li>
                 <li>
-                    <a href="#"
+                    <a :href="route('kanban.index')"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <Icons name="kamban" />
                     
