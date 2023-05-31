@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->integer('delais');
             $table->foreignId('equipe_id')->constrained('equipes')->onUpdate('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onUpdate('cascade');
             $table->timestamp('date_heure_livraison');

@@ -28,7 +28,14 @@ class ColonneController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
+        try {
+            Colonne::create([
+                'titre' => $request->column_name,
+            ]);
+            
+        } catch (\Throwable $th) {
+            dd($th);
+        }
     }
 
     /**

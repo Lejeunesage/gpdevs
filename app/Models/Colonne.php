@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Colonne extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'titre'
+    ];
+
+    public function taches()
+    {
+        return $this->hasMany(Tache::class);
+    }
 }
