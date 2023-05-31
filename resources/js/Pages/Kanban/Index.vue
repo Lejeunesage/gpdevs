@@ -44,6 +44,8 @@
                     <div class="bg-white border w-96 rounded-lg shadow-lg p-4">
                         <h3 class="text-xl font-bold mb-4">Ajouter une tâche</h3>
 
+
+
                         <div class="mb-4">
                             <label for="name" class="block">Nom de la tâche</label>
                             <input id="name" v-model="newTaskNames[colonneIndex]" type="text"
@@ -199,7 +201,7 @@ const addTask = (colonneIndex) => {
     if (newTaskName !== '') {
         // Créez un objet représentant la nouvelle tâche avec toutes ses données
         const newTask = {
-         
+            
             name: newTaskName,
             description: newTaskDescription,
             deadline: newTaskDeadline,
