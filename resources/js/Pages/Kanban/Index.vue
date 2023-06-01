@@ -6,7 +6,7 @@
         <Head title="Créer Kanban" />
         <div class="flex justify-center rounded-lg ">
             <button @click="showCreateInput"
-                class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded flex items-center space-x-2 hover:bg-blue-600">
+                class="bg-gradient-to-r from-blue-500 to-blue-700 mb-4 text-white py-2 px-4 rounded flex items-center space-x-2 hover:bg-blue-600">
                 <Icons name="plus" />
                 <span>Nouvelle colonne</span>
             </button>
@@ -35,7 +35,7 @@
 
                 <!-- Bouton d'ajout de tâches à la colonne -->
                 <button @click="showCreateTache(colonneIndex)"
-                    class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded flex items-center space-x-2 hover:bg-blue-600">
+                    class="mb-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-4 rounded flex items-center space-x-2 hover:bg-blue-600">
                     <Icons name="plus" />
                     <span>Nouvelle tâche</span>
                 </button>
@@ -62,7 +62,7 @@
 
                         <div class="mb-4">
                             <label for="datetime" class="block">Date et heure de livraison</label>
-                            <input id="datetime" v-model="newTaskDeadlines[colonneIndex]" type="datetime"
+                            <input id="datetime" v-model="newTaskDeadlines[colonneIndex]" type="datetime-local"
                                 placeholder="Ajouter une échéance"
                                 class="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500 w-full " />
                         </div>
@@ -158,7 +158,7 @@ const selectedCard = ref(null);
 const newColumnTitle = ref('');
 
 
-const newTaskId = ref([]);
+
 const newTaskNames = ref([]);
 const newTaskDescriptions = ref([]);
 const newTaskDeadlines = ref([]);
@@ -189,8 +189,14 @@ const removeCreateTache = (colonneIndex) => {
 
 const newTasks = ref([]); // Tableau pour stocker les nouvelles tâches à ajouter dans chaque colonne
 
+const colonneIds = computed(() => 
+{
+    console.log(colonnes.value.map((colonne) => colonne.id));
+    return colonnes.value.map((colonne) => colonne.id);
+});
+
 const addTask = (colonneIndex) => {
-  
+    const colonneId = colonneIds.value[colonneIndex];
     const newTaskName = newTaskNames.value[colonneIndex].trim();
     const newTaskDescription = newTaskDescriptions.value[colonneIndex].trim();
     const newTaskDeadline = newTaskDeadlines.value[colonneIndex].trim();
@@ -201,19 +207,25 @@ const addTask = (colonneIndex) => {
     if (newTaskName !== '') {
         // Créez un objet représentant la nouvelle tâche avec toutes ses données
         const newTask = {
-            
             name: newTaskName,
             description: newTaskDescription,
-            deadline: newTaskDeadline,
+            equipe_id: 1,
+            member: 2,
+            date_heure_livraison: newTaskDeadline,
+            colonne_id: colonneId,
             priority: newTaskPriority,
-            member: newTaskMember,
             // Autres détails de la tâche
         };
 
         console.log(newTask);
+        axios.post(route('tache.store', newTask)).then(response => {
+            removeCreateTache(colonneIndex)
+        })
 
         // Ajoutez la nouvelle tâche à la colonne correspondante
         colonnes.value[colonneIndex].taches.push(newTask);
+
+
 
         // Réinitialisez les champs d'ajout de tâche pour la colonne correspondante
         newTaskNames.value[colonneIndex] = '';
@@ -226,14 +238,26 @@ const addTask = (colonneIndex) => {
 
 
 // Ajouter une nouvelle colonne dans la base de donnée.
+
+
 const addColumn = () => {
-    console.log(newColumnTitle.value);
-    axios.post(route('column.store', {
-        column_name: newColumnTitle.value,
-    })).then(res => {
-        window.location.reload()
-    })
-    newColumnTitle.value = '';
+    const newColumnName = newColumnTitle.value.trim();
+
+    if (newColumnName !== '') {
+        const newColumn = {
+            titre: newColumnTitle.value
+        };
+
+        console.log(newColumnTitle.value);
+        axios.post(route('column.store', {
+            column_name: newColumnTitle.value,
+        })).then(res => {
+            removeCreate()
+        })
+
+        colonnes.value.push(newColumn);
+        newColumnTitle.value = '';
+    }
 };
 
 const openModal = (card) => {

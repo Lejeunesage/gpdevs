@@ -62,7 +62,25 @@ class TacheController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+
+        try {
+            Tache::create([
+                'name' => $request->name,
+            'description' => $request->description,
+            'equipe_id' => $request->equipe_id,
+            'user_id' => $request->member,
+            'date_heure_livraison' => $request->date_heure_livraison,
+            'colonne_id' => $request->colonne_id,
+            'priorite' => $request->priority
+            ,
+            ]);
+    
+        } catch (\Throwable $th) {
+          dd($th);
+        }
+
+        
     }
 
     /**

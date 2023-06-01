@@ -44,6 +44,7 @@ Route::get('/workplace/index', [EquipeController::class, 'index'])->name('workpl
 // Kanban
 Route::get('/kanban', [TacheController::class, 'index'])->name('kanban.index')->middleware('auth');
 Route::post('/column/store', [ColonneController::class, 'store'])->name('column.store')->middleware('auth');
+Route::post('/tache/store', [TacheController::class, 'store'])->name('tache.store')->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {
