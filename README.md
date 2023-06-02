@@ -1,51 +1,41 @@
-+------------------------------------------------------------------+
-|                            LOGO                                  |
-+------------------------------------------------------------------+
-|                            MENU                                  |
-+------------------------------------------------------------------+
-|                           TABLEAU                                 |
-|                                                                  |
-|   +----------------------------------------------------------+   |
-|   |          Projets en cours                                |   |
-|   | +------------------------------------------------------| | |
-|   | |    Projet 1                                        | | |
-|   | |    Progression : ████████████ (80%)                | | |
-|   | |    Délai : 31/07/2023                               | | |
-|   | |    Responsable : John Doe                           | | |
-|   | +------------------------------------------------------| | |
-|   | +------------------------------------------------------| | |
-|   | |    Projet 2                                        | | |
-|   | |    Progression : ██████ (50%)                       | | |
-|   | |    Délai : 15/08/2023                               | | |
-|   | |    Responsable : Jane Smith                         | | |
-|   | +------------------------------------------------------| | |
-|   | +------------------------------------------------------| | |
-|   | |    Projet 3                                        | | |
-|   | |    Progression : ██ (20%)                           | | |
-|   | |    Délai : 10/09/2023                               | | |
-|   | |    Responsable : Mark Johnson                       | | |
-|   | +------------------------------------------------------| | |
-|   |                                                        | | |
-|   +----------------------------------------------------------+   |
-|                                                                  |
-|   +----------------------------------------------------------+   |
-|   |          Tâches en cours                                 |   |
-|   | +------------------------------------------------------| | |
-|   | |    Tâche 1                                          | | |
-|   | |    Projet : Projet 1                                | | |
-|   | |    Responsable : John Doe                           | | |
-|   | +------------------------------------------------------| | |
-|   | +------------------------------------------------------| | |
-|   | |    Tâche 2                                          | | |
-|   | |    Projet : Projet 2                                | | |
-|   | |    Responsable : Jane Smith                         | | |
-|   | +------------------------------------------------------| | |
-|   | +------------------------------------------------------| | |
-|   | |    Tâche 3                                          | | |
-|   | |    Projet : Projet 2                                | | |
-|   | |    Responsable : Jane Smith                         | | |
-|   | +------------------------------------------------------| | |
-|   |                                                        | | |
-|   +----------------------------------------------------------+   |
-|                                                                  |
-+------------------------------------------------------------------+
+# Nom du Projet
+
+## Description
+[Description du projet]
+
+## Fonctionnalités principales
+- [Fonctionnalité 1]
+- [Fonctionnalité 2]
+- [Fonctionnalité 3]
+- ...
+
+## Captures d'écran
+![Capture d'écran 1](/chemin/vers/capture1.png)
+![Capture d'écran 2](/chemin/vers/capture2.png)
+![Capture d'écran 3](/chemin/vers/capture3.png)
+
+## Installation
+1. Cloner le repository : `git clone [URL du repository]`
+2. Installer les dépendances : `npm install`
+
+## Configuration
+1. Renommer le fichier `.env.example` en `.env`
+2. Modifier les valeurs dans le fichier `.env` selon vos besoins
+
+## Utilisation
+1. Lancer l'application : `npm start`
+2. Accéder à l'application via [URL de l'application]
+
+## Contribuer
+1. Forkez le projet
+2. Créez une branche pour votre fonctionnalité : `git checkout -b ma-nouvelle-fonctionnalite`
+3. Committez vos changements : `git commit -m "Ajouter ma nouvelle fonctionnalité"`
+4. Pushez vers la branche : `git push origin ma-nouvelle-fonctionnalite`
+5. Créez une Pull Request
+
+## Auteurs
+- [Nom de l'auteur 1](https://github.com/auteur1)
+- [Nom de l'auteur 2](https://github.com/auteur2)
+
+## License
+[Indiquer la licence du projet]
