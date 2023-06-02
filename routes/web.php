@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\ColonneController;
-use App\Http\Controllers\EquipeController;
+use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\Home\HomeController;
-use App\Http\Controllers\MembreEquipeController;
+use App\Http\Controllers\MembreProjetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TacheController;
 use Illuminate\Foundation\Application;
@@ -24,22 +24,22 @@ use Inertia\Inertia;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
+// Dashboard
+Route::get('/dashboard', [ProjetController::class, 'index'])->name('dashboard')->middleware(['auth', 'verified']);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Projet
+Route::get('/projet/create', [ProjetController::class, 'create'])->name('projet.create')->middleware('auth');
+Route::post('/projet/store', [ProjetController::class, 'store'])->name('projet.store')->middleware('auth');
+Route::post('/projet/ajoutMembre', [ProjetController::class, 'ajoutMembre'])->name('projet.ajoutMembre')->middleware('auth');
+Route::get('/projet/show/{id}', [ProjetController::class, 'show'])->name('projet.show')->middleware('auth');
 
-// Equipe
-Route::get('/equipe/create', [EquipeController::class, 'create'])->name('equipe.create')->middleware('auth');
-Route::post('/equipe/store', [EquipeController::class, 'store'])->name('equipe.store')->middleware('auth');
-Route::post('/equipe/ajoutMembre', [EquipeController::class, 'ajoutMembre'])->name('equipe.ajoutMembre')->middleware('auth');
 
-// MembreEquipe
-Route::post('/search-members', [MembreEquipeController::class, 'searchMembers'])->name('search.members');
-Route::post('/select-members', [MembreEquipeController::class, 'selectMember'])->name('select.members');
+// MembreProjet
+Route::post('/search-members', [MembreProjetController::class, 'searchMembers'])->name('search.members');
+Route::post('/select-members', [MembreProjetController::class, 'selectMember'])->name('select.members');
 
 // Espace de travail
-Route::get('/workplace/index', [EquipeController::class, 'index'])->name('workplace.index')->middleware('auth');
+Route::get('/workplace/index', [ProjetController::class, 'index'])->name('workplace.index')->middleware('auth');
 
 // Kanban
 Route::get('/kanban', [TacheController::class, 'index'])->name('kanban.index')->middleware('auth');

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MembreEquipe;
+use App\Models\MembreProjet;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class MembreEquipeController extends Controller
+class MembreProjetController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -56,7 +56,7 @@ class MembreEquipeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MembreEquipe $membreEquipe)
+    public function show(MembreProjet $membreProjet)
     {
         //
     }
@@ -64,7 +64,7 @@ class MembreEquipeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MembreEquipe $membreEquipe)
+    public function edit(MembreProjet $membreProjet)
     {
         //
     }
@@ -72,7 +72,7 @@ class MembreEquipeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, MembreEquipe $membreEquipe)
+    public function update(Request $request, MembreProjet $membreProjet)
     {
         //
     }
@@ -80,7 +80,7 @@ class MembreEquipeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MembreEquipe $membreEquipe)
+    public function destroy(MembreProjet $membreProjet)
     {
         //
     }

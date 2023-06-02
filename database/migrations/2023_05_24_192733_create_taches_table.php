@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->longText('description');
-            $table->foreignId('equipe_id')->constrained('equipes')->onUpdate('cascade')->onUpdate('cascade');
+            $table->foreignId('projet_id')->constrained('projets')->onUpdate('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onUpdate('cascade');
             $table->timestamp('date_heure_livraison');
             $table->unsignedBigInteger('colonne_id');

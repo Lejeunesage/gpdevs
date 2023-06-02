@@ -5,13 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Equipe extends Model
+class Projet extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'nom',
-        'creer_par',
+        'name',
+        'user_id',
+        'description',
     ];
 
 

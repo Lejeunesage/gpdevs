@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Colonne;
-use App\Models\Equipe;
+use App\Models\Projet;
 use App\Models\Tache;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class TacheController extends Controller
                 'id' => $colonne['id'],
                 'titre' => $colonne['titre'],
                 'taches' => $colonne['taches']->map(function ($tache) use ($colonne) {
-                    $equipe = Equipe::find($tache['equipe_id']);
+                    $projet = Projet::find($tache['projet_id']);
                     $user = User::find($tache['user_id']);
                     $colonneName = $colonne['titre'] ?? null;
 
@@ -29,8 +29,8 @@ class TacheController extends Controller
                         'id' => $tache['id'],
                         'name' => $tache['name'],
                         'description' => $tache['description'],
-                        'equipe_id' => $tache['equipe_id'],
-                        'equipe_name' => $equipe ? $equipe->nom : null,
+                        'projet_id' => $tache['projet_id'],
+                        'projet_name' => $projet ? $projet->nom : null,
                         'user_id' => $tache['user_id'],
                         'user_name' => $user ? $user->name : null,
                         'date_heure_livraison' => $tache['date_heure_livraison'],
@@ -67,20 +67,16 @@ class TacheController extends Controller
         try {
             Tache::create([
                 'name' => $request->name,
-            'description' => $request->description,
-            'equipe_id' => $request->equipe_id,
-            'user_id' => $request->member,
-            'date_heure_livraison' => $request->date_heure_livraison,
-            'colonne_id' => $request->colonne_id,
-            'priorite' => $request->priority
-            ,
+                'description' => $request->description,
+                'projet_id' => $request->projet_id,
+                'user_id' => $request->member,
+                'date_heure_livraison' => $request->date_heure_livraison,
+                'colonne_id' => $request->colonne_id,
+                'priorite' => $request->priority,
             ]);
-    
         } catch (\Throwable $th) {
-          dd($th);
+            dd($th);
         }
-
-        
     }
 
     /**

@@ -89,7 +89,7 @@ const sidebarClasses = computed(() => {
                 
            
                 <li>
-                    <a href="#"
+                    <a :href="route('dashboard')"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Tableau
                         de bord</a>
                 </li>
@@ -118,20 +118,20 @@ const sidebarClasses = computed(() => {
             <ul class="space-y-2 font-medium">
               
                 <li>
-                    <a :href="route('equipe.create')"
+                    <a :href="route('projet.create')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                         <Icons name="add" />
                         <span class="ml-3 hidden sm:flex">Créer nouveau projet</span>
                     </a>
                 </li>
                 <li>
-                    <a :href="route('workplace.index')"
+                    <a :href="route('dashboard')"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                         <Icons name="diagramm" />
-                        <span class="ml-3 hidden sm:flex">Espace de travail</span>
+                        <span class="ml-3 hidden sm:flex">Tableau de bord</span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a :href="route('kanban.index')"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
                     <Icons name="kamban" />
@@ -140,7 +140,7 @@ const sidebarClasses = computed(() => {
                     <span
                     class="inline-flex hidden sm:flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
                     </a>
-                </li>
+                </li> -->
 
             </ul>
         </div>

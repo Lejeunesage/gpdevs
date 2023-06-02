@@ -7,22 +7,40 @@ import { router } from '@inertiajs/vue3'
 import axios from 'axios';
 
 
+const form = ref({
+    name: '',
+    description: ''
+})
+
+
+
+const createProjet = () => {
+  router.post(route('projet.store'), form.value, {
+    onSuccess: () => {
+      // Réinitialise le formulaire après la soumission réussie
+      form.value.name = '';
+      form.value.description = '';
+    }
+  });
+};
+
+
 const teamName = ref(null);
 const users = ref([]);
 const show = ref('');
 const success = ref('');
 const error = ref('');
-const equipe_id = ref('');
+const projet_id = ref('');
 
-const createTeam = () => {
-    axios.post(route('equipe.store', { teamName: teamName.value }))
+const k = () => {
+    axios.post(route('projet.store', { teamName: teamName.value }))
         .then(response => {
 
             users.value = response.data.users;
             show.value = response.data.show;
             success.value = response.data.success;
             error.value = response.data.error;
-            equipe_id.value = response.data.equipe_id;
+            projet_id.value = response.data.projet_id;
             console.log(response.data.users);
 
 
@@ -38,9 +56,9 @@ function recupererLignesSelectionnees() {
 
     });
 
-    axios.post('/equipe/ajoutMembre', {
+    axios.post('/projet/ajoutMembre', {
         idMembres: lignes,
-        equipe_id: equipe_id.value
+        projet_id: projet_id.value
 
     })
         .then((response) => {
@@ -83,34 +101,34 @@ const searchMembers = () => {
         .catch(error => {
             console.error(error);
         });
-    };
-    
-    const filteredMembers = computed(() => {
-        if (!searchTerm.value) {
-            return [];
-        }
-        return members.value;
-    });
-    
-    const selectMember = (id) => {
-        console.log(id);
-        axios.post('/select-members', { id: id })
-            .then(response => {
-                searchTerm.value = response.data[0].name;
-                idMembres.value = response.data[0].id;
-              
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    
+};
+
+const filteredMembers = computed(() => {
+    if (!searchTerm.value) {
+        return [];
+    }
+    return members.value;
+});
+
+const selectMember = (id) => {
+    console.log(id);
+    axios.post('/select-members', { id: id })
+        .then(response => {
+            searchTerm.value = response.data[0].name;
+            idMembres.value = response.data[0].id;
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
 };
 
 const addMember = () => {
     // Récupérer l'id et l'email du membre sélectionné
-    axios.post('/equipe/ajoutMembre', {
+    axios.post('/projet/ajoutMembre', {
         idMembres: idMembres.value,
-        equipe_id:  equipe_id.value
+        projet_id: projet_id.value
 
     })
         .then((response) => {
@@ -155,20 +173,29 @@ const addMember = () => {
 
         </div>
 
-        <div class="container mx-auto px-4">
-            <h1 class="text-3xl font-bold mb-6">Créer un projet</h1>
-            <div class="max-w-lg ">
-                <label for="teamName" class="block text-gray-700">Nom du projet:</label>
-                <div class="flex items-center gap-5">
-                    <input type="text" id="teamName" v-model="teamName" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded">
 
-                    <button @click="createTeam" class="px-4 py-2  bg-green-500 text-white rounded">Créer</button>
+
+        <div class="max-w-md mx-auto mt-8 p-4 bg-white rounded shadow">
+            <h1 class="text-2xl font-bold mb-4">Créer un nouveau projet</h1>
+            <form @submit.prevent="createProjet">
+                <div class="mb-4">
+                    <label for="projectName" class="block text-gray-700 font-bold mb-2">Nom du projet:</label>
+                    <input type="text" id="projectName" v-model="form.name" required
+                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-            </div>
+                <div class="mb-4">
+                    <label for="projectDescription" class="block text-gray-700 font-bold mb-2">Description du
+                        projet:</label>
+                    <textarea id="projectDescription" v-model="form.description" required
+                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit"
+                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Créer
+                    le projet</button>
+            </form>
         </div>
 
-        <div v-if="show" class="container mx-auto px-4 mt-5">
+        <!-- <div v-if="show" class="container mx-auto px-4 mt-5">
             <h2 class="text-xl font-bold mb-4">Ajouter des membres</h2>
 
             <div>
@@ -183,7 +210,7 @@ const addMember = () => {
                 </ul>
             </div>
 
-        </div>
+        </div> -->
 
     </AuthenticatedLayout>
 </template>
