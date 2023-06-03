@@ -50,8 +50,30 @@ class MembreProjetController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $idMembres = $request->idMembres;
+        $projet_id = $request->projet_id;
+
+        MembreProjet::create([
+            'projet_id' =>  $projet_id,
+            'user_id' => $idMembres,
+            'role' => 'Membre'
+        ]);
+
+        // Récupérer les membres du projet
+        $membres = User::join('membre_projets', 'users.id', '=', 'membre_projets.user_id')
+            ->join('projets', 'membre_projets.projet_id', '=', 'projets.id')
+            ->where('projets.id',  $projet_id)
+            ->select('users.id', 'users.name')
+            ->get();
+
+
+        // Envoyer une réponse de succès si nécessaire
+        return response([
+            'membres' => $membres,
+            'success' => 'Un membre ajouté avec succès.'
+        ]);
     }
+
 
     /**
      * Display the specified resource.
@@ -80,8 +102,26 @@ class MembreProjetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MembreProjet $membreProjet)
+    public function destroy(Request $request)
     {
-        //
+        $idMembres = $request->idMembres;
+        $projet_id = $request->projet_id;
+
+        // Supprimer le membre du projet
+        MembreProjet::where('id', $idMembres)->where('projet_id', $projet_id)->delete();
+
+        // Récupérer les membres du projet
+        $membres = User::join('membre_projets', 'users.id', '=', 'membre_projets.user_id')
+            ->join('projets', 'membre_projets.projet_id', '=', 'projets.id')
+            ->where('projets.id',  $projet_id)
+            ->select('users.id', 'users.name')
+            ->get();
+
+
+        // Envoyer une réponse de succès si nécessaire
+        return response([
+            'membres' => $membres,
+            'success' => 'Un membre supprimé avec succès.'
+        ]);
     }
 }

@@ -74,6 +74,36 @@ class TacheController extends Controller
                 'colonne_id' => $request->colonne_id,
                 'priorite' => $request->priority,
             ]);
+
+
+            $colonnes = Colonne::where('projet_id', $request->projet_id)->with('taches')->get()->map(function ($colonne) {
+                return [
+                    'id' => $colonne->id,
+                    'titre' => $colonne->titre,
+                    'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
+                        $projet = Projet::find($tache->projet_id);
+                        $user = User::find($tache->user_id);
+                        $colonneName = $colonne->titre ?? null;
+
+                        return [
+                            'id' => $tache->id,
+                            'name' => $tache->name,
+                            'description' => $tache->description,
+                            'projet_id' => $tache->projet_id,
+                            'projet_name' => $projet ? $projet->nom : null,
+                            'user_id' => $tache->user_id,
+                            'user_name' => $user ? $user->name : null,
+                            'date_heure_livraison' => $tache->date_heure_livraison,
+                            'colonne_id' => $tache->colonne_id,
+                            'colonne_name' => $colonneName,
+                            'priorite' => $tache->priorite,
+                        ];
+                    })
+                ];
+            });
+
+
+            return response($colonnes);
         } catch (\Throwable $th) {
             dd($th);
         }
@@ -106,8 +136,46 @@ class TacheController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tache $tache)
+    public function destroy(Request $request)
     {
-        //
+   try {
+     //    dd( $request->id, $request->projet_id);
+        // Rechercher la tâche par son ID
+        $task = Tache::find($request->id);
+
+        // Supprimer la tâche
+        $task->delete();
+
+        $colonnes = Colonne::where('projet_id', $request->projet_id)->with('taches')->get()->map(function ($colonne) {
+            return [
+                'id' => $colonne->id,
+                'titre' => $colonne->titre,
+                'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
+                    $projet = Projet::find($tache->projet_id);
+                    $user = User::find($tache->user_id);
+                    $colonneName = $colonne->titre ?? null;
+
+                    return [
+                        'id' => $tache->id,
+                        'name' => $tache->name,
+                        'description' => $tache->description,
+                        'projet_id' => $tache->projet_id,
+                        'projet_name' => $projet ? $projet->nom : null,
+                        'user_id' => $tache->user_id,
+                        'user_name' => $user ? $user->name : null,
+                        'date_heure_livraison' => $tache->date_heure_livraison,
+                        'colonne_id' => $tache->colonne_id,
+                        'colonne_name' => $colonneName,
+                        'priorite' => $tache->priorite,
+                    ];
+                })
+            ];
+        });
+
+        return response($colonnes);
+ 
+   } catch (\Throwable $th) {
+    dd($th);
+   }
     }
 }

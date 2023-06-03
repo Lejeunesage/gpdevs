@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('projet_id')->constrained('projets')->onUpdate('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->enum('role', ['Administrateur','Chef de projet', 'Membre', 'Responsable de tâche']);
+            $table->enum('role', ['Chef de projet', 'Membre']);
             $table->timestamps();
         });
     }

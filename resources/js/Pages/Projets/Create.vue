@@ -181,16 +181,16 @@ const addMember = () => {
                 <div class="mb-4">
                     <label for="projectName" class="block text-gray-700 font-bold mb-2">Nom du projet:</label>
                     <input type="text" id="projectName" v-model="form.name" required
-                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        class="w-full px-4 py-2  rounded focus:outline-none focus:ring-2 focus:ring-blue-200">
                 </div>
                 <div class="mb-4">
                     <label for="projectDescription" class="block text-gray-700 font-bold mb-2">Description du
                         projet:</label>
                     <textarea id="projectDescription" v-model="form.description" required
-                        class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        class="w-full px-4 py-2  rounded focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
                 </div>
                 <button type="submit"
-                    class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Créer
+                    class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-200">Créer
                     le projet</button>
             </form>
         </div>

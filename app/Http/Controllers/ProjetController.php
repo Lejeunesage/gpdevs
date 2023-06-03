@@ -104,6 +104,16 @@ class ProjetController extends Controller
                         'user_id' => $id,
                         'role' => 'Chef de projet'
                     ]);
+
+                    // Création des colonnes par défaut
+                    $colonnes = ['A faire', 'En cours', 'Terminé'];
+
+                    foreach ($colonnes as $colonne) {
+                        Colonne::create([
+                            'projet_id' => $create_projet->id,
+                            'titre' => $colonne,
+                        ]);
+                    }
                 }
 
                 return redirect()->route('dashboard');
@@ -114,25 +124,7 @@ class ProjetController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function ajoutMembre(Request $request)
-    {
-        $idMembres = $request->idMembres;
-        $projet_id = $request->projet_id;
 
-        MembreProjet::create([
-            'projet_id' =>  $projet_id,
-            'user_id' => $idMembres,
-            'role' => 'Collaborateur'
-        ]);
-
-        // Envoyer une réponse de succès si nécessaire
-        return response([
-            'success' => 'Un membre ajouté avec succès.'
-        ]);
-    }
 
     /**
      * Display the specified resource.
@@ -141,11 +133,15 @@ class ProjetController extends Controller
     {
         $projet = Projet::findOrFail($id);
 
-        // Récupérer les membres du projet
-        $membres = MembreProjet::where('projet_id', $id)->get();
+        // Récupérer les membres du projet avec leur rôle
+        $membres = User::join('membre_projets', 'users.id', '=', 'membre_projets.user_id')
+            ->join('projets', 'membre_projets.projet_id', '=', 'projets.id')
+            ->where('projets.id', $id)
+            ->select('users.id', 'users.name', 'membre_projets.role')
+            ->get();
 
 
-        $colonnes = Colonne::where('projet_id',$id)->with('taches')->get()->map(function ($colonne) {
+        $colonnes = Colonne::where('projet_id', $id)->with('taches')->get()->map(function ($colonne) {
             return [
                 'id' => $colonne->id,
                 'titre' => $colonne->titre,
@@ -153,7 +149,7 @@ class ProjetController extends Controller
                     $projet = Projet::find($tache->projet_id);
                     $user = User::find($tache->user_id);
                     $colonneName = $colonne->titre ?? null;
-        
+
                     return [
                         'id' => $tache->id,
                         'name' => $tache->name,
@@ -170,11 +166,13 @@ class ProjetController extends Controller
                 })
             ];
         });
-        
 
-        // dd($projet,
-        // $membres,
-        // $colonnes);
+
+        // dd(
+        //     $projet,
+        //     $membres,
+        //     $colonnes
+        // );
 
         return Inertia::render('Projets/Show', [
             'projet' => $projet,

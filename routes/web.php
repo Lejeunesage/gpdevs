@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ColonneController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\MembreProjetController;
@@ -27,14 +28,18 @@ Route::get('/', [HomeController::class, 'home'])->name('home');
 // Dashboard
 Route::get('/dashboard', [ProjetController::class, 'index'])->name('dashboard')->middleware(['auth', 'verified']);
 
+// Layout
+Route::get('/layout/index', [Controller::class, 'index'])->name('layout.index')->middleware('auth');
+
 // Projet
 Route::get('/projet/create', [ProjetController::class, 'create'])->name('projet.create')->middleware('auth');
 Route::post('/projet/store', [ProjetController::class, 'store'])->name('projet.store')->middleware('auth');
-Route::post('/projet/ajoutMembre', [ProjetController::class, 'ajoutMembre'])->name('projet.ajoutMembre')->middleware('auth');
 Route::get('/projet/show/{id}', [ProjetController::class, 'show'])->name('projet.show')->middleware('auth');
 
 
 // MembreProjet
+Route::post('/membre/store', [MembreProjetController::class, 'store'])->name('membre.store')->middleware('auth');
+Route::post('/membre/delete', [MembreProjetController::class, 'destroy'])->name('membre.delete')->middleware('auth');
 Route::post('/search-members', [MembreProjetController::class, 'searchMembers'])->name('search.members');
 Route::post('/select-members', [MembreProjetController::class, 'selectMember'])->name('select.members');
 
@@ -43,8 +48,14 @@ Route::get('/workplace/index', [ProjetController::class, 'index'])->name('workpl
 
 // Kanban
 Route::get('/kanban', [TacheController::class, 'index'])->name('kanban.index')->middleware('auth');
+
+// Colonne
 Route::post('/column/store', [ColonneController::class, 'store'])->name('column.store')->middleware('auth');
+Route::post('/column/destroy', [ColonneController::class, 'destroy'])->name('column.destroy')->middleware('auth');
+
+// Tâche
 Route::post('/tache/store', [TacheController::class, 'store'])->name('tache.store')->middleware('auth');
+Route::post('/tache/destroy', [TacheController::class, 'destroy'])->name('tache.destroy')->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {

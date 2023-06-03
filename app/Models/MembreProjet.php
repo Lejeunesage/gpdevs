@@ -14,4 +14,14 @@ class MembreProjet extends Model
         'user_id',
         'role'
     ];
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function projet()
+    {
+        return $this->belongsTo(Projet::class, 'projet_id');
+    }
 }

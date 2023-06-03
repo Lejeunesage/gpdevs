@@ -10,7 +10,9 @@ class Colonne extends Model
     use HasFactory;
 
     protected $fillable = [
+        'projet_id',
         'titre'
+        
     ];
 
     public function taches()
