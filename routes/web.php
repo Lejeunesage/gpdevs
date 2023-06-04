@@ -35,6 +35,7 @@ Route::get('/layout/index', [Controller::class, 'index'])->name('layout.index')-
 Route::get('/projet/create', [ProjetController::class, 'create'])->name('projet.create')->middleware('auth');
 Route::post('/projet/store', [ProjetController::class, 'store'])->name('projet.store')->middleware('auth');
 Route::get('/projet/show/{id}', [ProjetController::class, 'show'])->name('projet.show')->middleware('auth');
+Route::post('/projet/destroy', [ProjetController::class, 'destroy'])->name('projet.destroy')->middleware('auth');
 
 
 // MembreProjet
@@ -51,6 +52,7 @@ Route::get('/kanban', [TacheController::class, 'index'])->name('kanban.index')->
 
 // Colonne
 Route::post('/column/store', [ColonneController::class, 'store'])->name('column.store')->middleware('auth');
+Route::post('/column/update', [ColonneController::class, 'update'])->name('column.update')->middleware('auth');
 Route::post('/column/destroy', [ColonneController::class, 'destroy'])->name('column.destroy')->middleware('auth');
 
 // Tâche

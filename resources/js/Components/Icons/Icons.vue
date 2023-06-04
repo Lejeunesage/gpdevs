@@ -6,6 +6,20 @@
     </svg>
 
 
+    <svg v-else-if="name === 'delete'" width="20"  xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 64 64" viewBox="0 0 64 64" id="delete">
+        <g transform="translate(232 228)">
+            <path fill="#134563"
+                d="M-207.5-205.1h3v24h-3zM-201.5-205.1h3v24h-3zM-195.5-205.1h3v24h-3zM-219.5-214.1h39v3h-39z"></path>
+            <path fill="#134563"
+                d="M-192.6-212.6h-2.8v-3c0-.9-.7-1.6-1.6-1.6h-6c-.9 0-1.6.7-1.6 1.6v3h-2.8v-3c0-2.4 2-4.4 4.4-4.4h6c2.4 0 4.4 2 4.4 4.4v3">
+            </path>
+            <path fill="#134563"
+                d="M-191-172.1h-18c-2.4 0-4.5-2-4.7-4.4l-2.8-36 3-.2 2.8 36c.1.9.9 1.6 1.7 1.6h18c.9 0 1.7-.8 1.7-1.6l2.8-36 3 .2-2.8 36c-.2 2.5-2.3 4.4-4.7 4.4">
+            </path>
+        </g>
+    </svg>
+
+
     <svg v-else-if="name === 'closebtn'" xmlns="http://www.w3.org/2000/svg" width="50" height="30" viewBox="0 0 512 512"
         id="close">
         <path
@@ -28,8 +42,8 @@
         </path>
     </svg>
 
-    <svg v-else-if="name === 'conversation'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-        stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+    <svg v-else-if="name === 'conversation'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
         <path
             d="M21 23a.5.5 0 01-.34-.14l-3.6-2.6a.5.5 0 00-.65.04l-1.9 1.51A2.15 2.15 0 0113 21H3a2.16 2.16 0 01-2-2V3a2.16 2.16 0 012-2h14a2.16 2.16 0 012 2v16a2.16 2.16 0 01-2 2zM8 11h8m-8 4h6m-6-8h6m-6 12h8" />
     </svg>

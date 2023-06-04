@@ -103,8 +103,33 @@
 
                     <div v-if="showDropdown[colonneIndex]" ref="dropdown"
                         class="absolute block right-4 top-12 bg-slate-300 p-1 w-[10rem] rounded z-50">
-                        <button @click="renameColonne(colonneIndex)"
+                        <button @click="showRenameModal = true"
                             class="hover:bg-slate-100 text-start w-full px-5 py-2">Renommer</button>
+
+                        <div v-if="showRenameModal"
+                            class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                            <div class="bg-white p-4 rounded shadow">
+                                <h2 class="text-lg font-bold mb-4">Renommer la colonne</h2>
+                                <div>
+                                    <div class="mb-4">
+                                        <label for="newColumnName" class="block text-sm font-medium text-gray-700">Nouveau
+                                            nom de colonne:</label>
+                                        <input v-model="newColumnName" id="newColumnName" type="text" required
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <button type="submit" @click="renameColonne(colonneIndex)"
+                                            class="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                            Renommer
+                                        </button>
+                                        <button @click="closeRenameModal"
+                                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                                            Annuler
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button @click="deleteColonne(colonneIndex)"
                             class="hover:bg-slate-100 text-start w-full px-5 py-2">Supprimer</button>
                     </div>
@@ -233,12 +258,11 @@
 
                 <div v-if="isConversationModalOpen"
                     class="fixed inset-0  bg-gray-900 bg-opacity-50 flex items-center justify-center ">
-                    <div
-                        class="bg-white rounded-lg p-4 mx-auto w-full  md:max-w-sm lg:max-w-5xl xl:max-w-6xl h-96">
+                    <div class="bg-white rounded-lg p-4 mx-auto w-full  md:max-w-sm lg:max-w-5xl xl:max-w-6xl h-96">
                         <h2 class="text-xl font-bold mb-4">Boîte de messagerie</h2>
                         <div class="h-full bg-gray-100 rounded-lg overflow-y-auto">
                             <!-- Contenu de la boîte de messagerie -->
-                            
+
                         </div>
                     </div>
                 </div>
@@ -318,19 +342,37 @@ onBeforeUnmount(() => {
 const deleteColonne = (colonneIndex) => {
     const colonne_id = colonneIds.value[colonneIndex];
     axios.post(route('column.destroy', {
-        colonne_id : colonne_id,
-        projet_id : props.projet.id
+        colonne_id: colonne_id,
+        projet_id: props.projet.id
     })).then(response => {
         colonnes.value = response.data;
     })
 
 };
 
+
+const showRenameModal = ref(false);
+const newColumnName = ref('');
+
 const renameColonne = (colonneIndex) => {
-    // Logique de renommage de la colonne avec l'index donné
-    const newTitre = prompt("Nouveau titre de la colonne");
-    colonnes.value[colonneIndex].titre = newTitre;
+    const colonne_id = colonneIds.value[colonneIndex];
+
+    axios.post(route('column.update', {
+        colonne_id: colonne_id,
+        projet_id: props.projet.id,
+        newColumnName : newColumnName.value,
+    })).then(response => {
+        colonnes.value = response.data;
+        newColumnName.value = '';
+    })
+
+    closeRenameModal();
 };
+
+
+ const closeRenameModal = () => {
+      showRenameModal.value = false;
+    };
 
 
 let success = ref('');

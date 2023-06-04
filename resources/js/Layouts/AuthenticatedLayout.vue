@@ -8,6 +8,7 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
+import { router } from '@inertiajs/vue3'
 
 
 const showUserDropdown = ref(false);
@@ -28,7 +29,7 @@ const sidebarClasses = computed(() => {
         'top-0': true,
         'left-0': false,
         'z-40': true,
-        'sm:w-25': !isSidebarOpen.value ,
+        'sm:w-25': !isSidebarOpen.value,
         'h-screen': true,
         'pt-20': true,
         'transition-transform': true,
@@ -46,7 +47,7 @@ const move = computed(() => {
     return {
         'p-4': true,
         'ml-[15rem]': true,
-        'sm:ml-[5rem]': !isSidebarOpen.value ,
+        'sm:ml-[5rem]': !isSidebarOpen.value,
     };
 });
 
@@ -59,14 +60,28 @@ const toggleClicked = () => {
 };
 
 const projets = ref([]);
+
 const showProjects = () => {
-    axios.get(route('layout.index')).then(response => {
-        projets.value = response.data;
-    });
+  axios.get(route('layout.index')).then(response => {
+    projets.value = response.data;
+  });
+};
+
+onMounted(() => {
+  showProjects();
+});
+
+
+function removeProjet(id, name) {
+    // Demander à l'utilisateur s'il souhaite supprimer le projet
+    const confirmation = confirm(`Voulez-vous supprimer le projet : ${name}?`);
+
+    // Vérifier la confirmation de l'utilisateur
+    if (confirmation) {
+        router.post(route('projet.destroy', { id: id }))
+    ;
+    }
 }
-
-
-showProjects()
 </script>
 
 
@@ -167,25 +182,38 @@ showProjects()
                 </ul>
 
 
-                <ul class="border-t-2 mt-4 ">
-                    <li v-for="projet, index in projets" :key="index">
-                        <NavLink :href="route('projet.show', projet.id)" :active="route().current('projet.show',projet.id)"
-                            class="flex items-center p-2 my-2 truncate text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <span class="border w-8 h-8 bg-teal-600 text-white flex justify-center items-center">{{ projet.name[0] }}</span>
+                <ul class="border-t-2 border-b-2 mt-4 pb-2 relative h-64 overflow-y-auto"
+                    :class="{ 'overflow-y-scroll': projets.length >= 5 }">
+                    <li v-for="(projet, index) in projets" :key="index" class="flex items-center">
+                        <NavLink :href="route('projet.show', projet.id)" :active="route().current('projet.show', projet.id)"
+                            class="flex items-center p-2 my-1 truncate text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            @mouseover="showDeleteButton = true" @mouseout="showDeleteButton = false">
+                            <span
+                                class="border w-6 h-6 bg-teal-600 text-white flex justify-center items-center rounded-full">{{
+                                    projet.name[0] }}</span>
 
+                            <span v-if="isSidebarOpen" class="flex-1 ml-3 whitespace-nowrap hidden sm:flex">{{ projet.name
+                            }}</span>
 
-                            <span v-if="isSidebarOpen" class="flex-1 ml-3 whitespace-nowrap hidden sm:flex">{{ projet.name }}</span>
-                           
                         </NavLink>
+                        <div class="group">
+                            <Icons name="delete" class="cursor-pointer opacity-0 group-hover:opacity-100"
+                                @click="removeProjet(projet.id, projet.name)" />
+
+                        </div>
                     </li>
                 </ul>
+
+
+
+
             </div>
 
         </aside>
 
 
         <!-- Page Content -->
-        <div  :class="move">
+        <div :class="move">
             <div class="p-4 border-gray-200 rounded-lg mt-14 ">
                 <slot />
             </div>

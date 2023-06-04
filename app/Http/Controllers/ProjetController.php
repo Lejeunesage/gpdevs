@@ -77,20 +77,20 @@ class ProjetController extends Controller
         try {
             $id = Auth::user()->id;
 
-            // Vérifier si une équipe avec le même nom existe déjà
-            $existingTeam = Projet::where('user_id', $id)
+            // Vérifier si un=projet avec le même nom existe déjà
+            $existingProjet = Projet::where('user_id', $id)
                 ->where('name', $request->name)
                 ->first();
 
-            if ($existingTeam) {
-                // Une équipe avec le même nom existe déjà, envoyer un message d'erreur
+            if ($existingProjet) {
+                // Un projet avec le même nom existe déjà, envoyer un message d'erreur
                 return Inertia::render('Projet/Create', [
                     'error' => 'Un projet existe déja avec le mème nom.'
                 ]);
             } else {
 
 
-                // Créer une nouvelle équipe
+                // Créer un nouveau projet
                 $create_projet = Projet::create([
                     'name' => $request->name,
                     'description' =>  $request->description,
@@ -98,7 +98,7 @@ class ProjetController extends Controller
                 ]);
 
                 if ($create_projet) {
-                    // Associer l'utilisateur à l'équipe en tant que propriétaire
+                    // Associer l'utilisateur au projet en tant que chef de projet
                     MembreProjet::create([
                         'projet_id' => $create_projet->id,
                         'user_id' => $id,
@@ -116,7 +116,10 @@ class ProjetController extends Controller
                     }
                 }
 
-                return redirect()->route('dashboard');
+                $newProjetId = $create_projet->id;
+
+                return redirect()->route('projet.show', ['id' => $newProjetId]);
+                // return redirect()->route('dashboard');
             }
         } catch (\Throwable $th) {
             // Gérer les exceptions
@@ -201,8 +204,40 @@ class ProjetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Projet $projet)
+    public function destroy(Request $request)
     {
-        //
+        try {
+            $projectId = $request->id;
+
+            // Supprimer toutes les tâches liées au projet
+            $deleteTache = Tache::where('projet_id', $projectId);
+
+            if($deleteTache){
+                $deleteTache->delete();
+            }
+
+            // Supprimer toutes les colonnes liées au projet
+            $deleteColonne = Colonne::where('projet_id', $projectId);
+
+            if($deleteColonne){
+                $deleteColonne->delete();
+            }
+
+            // Supprimer toutes les membres liées au projet
+            $deleteMembres = MembreProjet::where('projet_id', $projectId);
+
+            if($deleteMembres){
+                $deleteMembres->delete();
+            }
+
+            // Supprimer le projet lui-même
+            Projet::destroy($projectId);
+
+            
+
+          return redirect()->route('dashboard');
+        } catch (\Exception $th) {
+            dd($th);
+        }
     }
 }

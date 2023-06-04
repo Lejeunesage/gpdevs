@@ -25,127 +25,12 @@ const createProjet = () => {
 };
 
 
-const teamName = ref(null);
-const users = ref([]);
-const show = ref('');
-const success = ref('');
-const error = ref('');
-const projet_id = ref('');
-
-const k = () => {
-    axios.post(route('projet.store', { teamName: teamName.value }))
-        .then(response => {
-
-            users.value = response.data.users;
-            show.value = response.data.show;
-            success.value = response.data.success;
-            error.value = response.data.error;
-            projet_id.value = response.data.projet_id;
-            console.log(response.data.users);
-
-
-        })
-}
-
-const lignesSelectionnees = ref([]);
-
-function recupererLignesSelectionnees() {
-    const lignes = [];
-    lignesSelectionnees.value.forEach((index) => {
-        lignes.push(users.value[index].id);
-
-    });
-
-    axios.post('/projet/ajoutMembre', {
-        idMembres: lignes,
-        projet_id: projet_id.value
-
-    })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-}
-
-onMounted(() => {
-    // Effacement du message de notification après quelques secondes
-    if (success.value) {
-        setTimeout(() => {
-            success.value = '';
-        }, 3000);
-    }
-    // Effacement du message de notification après quelques secondes
-    if (error.value) {
-        setTimeout(() => {
-            error.value = '';
-        }, 3000);
-    }
-})
-
-const searchTerm = ref('');
-const idMembres = ref('');
-const members = ref([]);
-
-watch(searchTerm, () => {
-    searchMembers();
-});
-
-const searchMembers = () => {
-    axios.post('/search-members', { searchTerm: searchTerm.value })
-        .then(response => {
-            members.value = response.data;
-            console.log(members.value);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-};
-
-const filteredMembers = computed(() => {
-    if (!searchTerm.value) {
-        return [];
-    }
-    return members.value;
-});
-
-const selectMember = (id) => {
-    console.log(id);
-    axios.post('/select-members', { id: id })
-        .then(response => {
-            searchTerm.value = response.data[0].name;
-            idMembres.value = response.data[0].id;
-
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-};
-
-const addMember = () => {
-    // Récupérer l'id et l'email du membre sélectionné
-    axios.post('/projet/ajoutMembre', {
-        idMembres: idMembres.value,
-        projet_id: projet_id.value
-
-    })
-        .then((response) => {
-            searchTerm.value = ''
-            console.log(response);
-            success.value = response.data.success;
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-};
 
 </script>
 <template>
     <AuthenticatedLayout>
 
-        <Head title="Creation d'équipe" />
+        <Head title="Creation de projet" />
         <!-- Votre template HTML -->
         <div>
             <div v-if="error"
@@ -195,22 +80,7 @@ const addMember = () => {
             </form>
         </div>
 
-        <!-- <div v-if="show" class="container mx-auto px-4 mt-5">
-            <h2 class="text-xl font-bold mb-4">Ajouter des membres</h2>
-
-            <div>
-                <div class="flex gap-5">
-                    <input class=" px-4 py-2 border border-gray-300 rounded" v-model="searchTerm" type="search" placeholder="Rechercher un membre">
-                    <button class="px-4 py-2  bg-green-500 text-white rounded" @click="addMember()">Ajouter</button>
-                </div>
-                <ul>
-                    <li class="cursor-pointer" v-if="filteredMembers.length > 0" @click="selectMember(filteredMembers[0].id)">
-                        {{ filteredMembers[0].name }}
-                    </li>
-                </ul>
-            </div>
-
-        </div> -->
+    
 
     </AuthenticatedLayout>
 </template>
