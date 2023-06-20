@@ -11,7 +11,8 @@ class Colonne extends Model
 
     protected $fillable = [
         'projet_id',
-        'titre'
+        'titre',
+        'numero_ordre'
         
     ];
 

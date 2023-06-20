@@ -108,11 +108,26 @@ class ProjetController extends Controller
                     // Création des colonnes par défaut
                     $colonnes = ['A faire', 'En cours', 'Terminé'];
 
+
+                    // $numero_ordre = '';
+                    // Vérifier si le projet n'a pas encore de colonnes
+                    if ($create_projet->colonnes()->count() === 0) {
+                        $numero_ordre = 1; // Numéro d'ordre initial pour la première colonne
+                    } else {
+                        // Obtenir le numéro d'ordre de la dernière colonne
+                        $lastColonne = $create_projet->colonnes()->max('numero_ordre');
+                        $numero_ordre = $lastColonne + 1;
+                    }
+
+                    // Création des colonnes par défaut
                     foreach ($colonnes as $colonne) {
                         Colonne::create([
                             'projet_id' => $create_projet->id,
                             'titre' => $colonne,
+                            'numero_ordre' => $numero_ordre,
                         ]);
+
+                        $numero_ordre++; // Incrémente le numéro d'ordre pour la prochaine colonne
                     }
                 }
 
@@ -144,32 +159,36 @@ class ProjetController extends Controller
             ->get();
 
 
-        $colonnes = Colonne::where('projet_id', $id)->with('taches')->get()->map(function ($colonne) {
-            return [
-                'id' => $colonne->id,
-                'titre' => $colonne->titre,
-                'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
-                    $projet = Projet::find($tache->projet_id);
-                    $user = User::find($tache->user_id);
-                    $colonneName = $colonne->titre ?? null;
-
-                    return [
-                        'id' => $tache->id,
-                        'name' => $tache->name,
-                        'description' => $tache->description,
-                        'projet_id' => $tache->projet_id,
-                        'projet_name' => $projet ? $projet->nom : null,
-                        'user_id' => $tache->user_id,
-                        'user_name' => $user ? $user->name : null,
-                        'date_heure_livraison' => $tache->date_heure_livraison,
-                        'colonne_id' => $tache->colonne_id,
-                        'colonne_name' => $colonneName,
-                        'priorite' => $tache->priorite,
-                    ];
-                })
-            ];
-        });
-
+            $colonnes = Colonne::where('projet_id', $id)
+            ->with('taches')
+            ->orderBy('numero_ordre', 'asc')
+            ->get()
+            ->map(function ($colonne) {
+                return [
+                    'id' => $colonne->id,
+                    'titre' => $colonne->titre,
+                    'numero_ordre' => $colonne->numero_ordre,
+                    'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
+                        $projet = Projet::find($tache->projet_id);
+                        $user = User::find($tache->user_id);
+                        $colonneName = $colonne->titre ?? null;
+        
+                        return [
+                            'id' => $tache->id,
+                            'name' => $tache->name,
+                            'description' => $tache->description,
+                            'projet_id' => $tache->projet_id,
+                            'projet_name' => $projet ? $projet->nom : null,
+                            'user_id' => $tache->user_id,
+                            'user_name' => $user ? $user->name : null,
+                            'date_heure_livraison' => $tache->date_heure_livraison,
+                            'colonne_id' => $tache->colonne_id,
+                            'colonne_name' => $colonneName,
+                            'priorite' => $tache->priorite,
+                        ];
+                    }),
+                ];
+            });
 
         // dd(
         //     $projet,
@@ -212,30 +231,30 @@ class ProjetController extends Controller
             // Supprimer toutes les tâches liées au projet
             $deleteTache = Tache::where('projet_id', $projectId);
 
-            if($deleteTache){
+            if ($deleteTache) {
                 $deleteTache->delete();
             }
 
             // Supprimer toutes les colonnes liées au projet
             $deleteColonne = Colonne::where('projet_id', $projectId);
 
-            if($deleteColonne){
+            if ($deleteColonne) {
                 $deleteColonne->delete();
             }
 
             // Supprimer toutes les membres liées au projet
             $deleteMembres = MembreProjet::where('projet_id', $projectId);
 
-            if($deleteMembres){
+            if ($deleteMembres) {
                 $deleteMembres->delete();
             }
 
             // Supprimer le projet lui-même
             Projet::destroy($projectId);
 
-            
 
-          return redirect()->route('dashboard');
+
+            return redirect()->route('dashboard');
         } catch (\Exception $th) {
             dd($th);
         }

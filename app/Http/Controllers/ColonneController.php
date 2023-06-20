@@ -32,20 +32,31 @@ class ColonneController extends Controller
     public function store(Request $request)
     {
         try {
+
+            $lastColonne = Colonne::where('projet_id', $request->projet_id)->max('numero_ordre');
+            $numero_ordre = $lastColonne + 1;
+
             Colonne::create([
                 'projet_id' => $request->projet_id,
                 'titre' => $request->titre,
+                'numero_ordre' => $numero_ordre,
             ]);
 
-            $colonnes = Colonne::where('projet_id', $request->projet_id)->with('taches')->get()->map(function ($colonne) {
+
+            $colonnes = Colonne::where('projet_id', $request->projet_id)
+            ->with('taches')
+            ->orderBy('numero_ordre', 'asc')
+            ->get()
+            ->map(function ($colonne) {
                 return [
                     'id' => $colonne->id,
                     'titre' => $colonne->titre,
+                    'numero_ordre' => $colonne->numero_ordre,
                     'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
                         $projet = Projet::find($tache->projet_id);
                         $user = User::find($tache->user_id);
                         $colonneName = $colonne->titre ?? null;
-
+        
                         return [
                             'id' => $tache->id,
                             'name' => $tache->name,
@@ -59,7 +70,7 @@ class ColonneController extends Controller
                             'colonne_name' => $colonneName,
                             'priorite' => $tache->priorite,
                         ];
-                    })
+                    }),
                 ];
             });
 
@@ -105,15 +116,20 @@ class ColonneController extends Controller
             $colonne->save();
         }
 
-        $colonnes = Colonne::where('projet_id', $request->projet_id)->with('taches')->get()->map(function ($colonne) {
+        $colonnes = Colonne::where('projet_id', $request->projet_id)
+        ->with('taches')
+        ->orderBy('numero_ordre', 'asc')
+        ->get()
+        ->map(function ($colonne) {
             return [
                 'id' => $colonne->id,
                 'titre' => $colonne->titre,
+                'numero_ordre' => $colonne->numero_ordre,
                 'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
                     $projet = Projet::find($tache->projet_id);
                     $user = User::find($tache->user_id);
                     $colonneName = $colonne->titre ?? null;
-
+    
                     return [
                         'id' => $tache->id,
                         'name' => $tache->name,
@@ -127,7 +143,7 @@ class ColonneController extends Controller
                         'colonne_name' => $colonneName,
                         'priorite' => $tache->priorite,
                     ];
-                })
+                }),
             ];
         });
 
@@ -153,15 +169,20 @@ class ColonneController extends Controller
             // Supprimer la colonne
             Colonne::findOrFail($request->colonne_id)->delete();
 
-            $colonnes = Colonne::where('projet_id', $request->projet_id)->with('taches')->get()->map(function ($colonne) {
+            $colonnes = Colonne::where('projet_id', $request->projet_id)
+            ->with('taches')
+            ->orderBy('numero_ordre', 'asc')
+            ->get()
+            ->map(function ($colonne) {
                 return [
                     'id' => $colonne->id,
                     'titre' => $colonne->titre,
+                    'numero_ordre' => $colonne->numero_ordre,
                     'taches' => $colonne->taches->map(function ($tache) use ($colonne) {
                         $projet = Projet::find($tache->projet_id);
                         $user = User::find($tache->user_id);
                         $colonneName = $colonne->titre ?? null;
-
+        
                         return [
                             'id' => $tache->id,
                             'name' => $tache->name,
@@ -175,7 +196,7 @@ class ColonneController extends Controller
                             'colonne_name' => $colonneName,
                             'priorite' => $tache->priorite,
                         ];
-                    })
+                    }),
                 ];
             });
 

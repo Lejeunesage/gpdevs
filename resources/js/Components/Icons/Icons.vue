@@ -6,7 +6,8 @@
     </svg>
 
 
-    <svg v-else-if="name === 'delete'" width="20"  xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 64 64" viewBox="0 0 64 64" id="delete">
+    <svg v-else-if="name === 'delete'" width="20" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 64 64"
+        viewBox="0 0 64 64" id="delete">
         <g transform="translate(232 228)">
             <path fill="#134563"
                 d="M-207.5-205.1h3v24h-3zM-201.5-205.1h3v24h-3zM-195.5-205.1h3v24h-3zM-219.5-214.1h39v3h-39z"></path>
@@ -17,6 +18,37 @@
                 d="M-191-172.1h-18c-2.4 0-4.5-2-4.7-4.4l-2.8-36 3-.2 2.8 36c.1.9.9 1.6 1.7 1.6h18c.9 0 1.7-.8 1.7-1.6l2.8-36 3 .2-2.8 36c-.2 2.5-2.3 4.4-4.7 4.4">
             </path>
         </g>
+    </svg>
+
+
+
+    <svg v-else-if="name === 'reload'" width="20"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="reload">
+        <path
+            d="M12 4a8 8 0 0 1 4.985 1.758H15.242a1 1 0 0 0 0 2h4a1 1 0 0 0 1-1v-4a1 1 0 1 0-2 0V4.206A9.983 9.983 0 0 0 2 12a1 1 0 0 0 2 0A8.009 8.009 0 0 1 12 4zM21 11a1 1 0 0 0-1 1A7.986 7.986 0 0 1 7.015 18.242H8.757a1 1 0 1 0 0-2h-4a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V19.794A9.984 9.984 0 0 0 22 12 1 1 0 0 0 21 11z">
+        </path>
+    </svg>
+
+
+
+    <svg v-else-if="name === 'image'" aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+            clip-rule="evenodd"></path>
+    </svg>
+
+    <svg v-else-if="name === 'emojie'" aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+            clip-rule="evenodd"></path>
+    </svg>
+
+    <svg v-else-if="name === 'send'" aria-hidden="true" class="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+        </path>
     </svg>
 
 

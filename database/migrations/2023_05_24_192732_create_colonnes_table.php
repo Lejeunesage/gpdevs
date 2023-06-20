@@ -12,23 +12,20 @@ return new class extends Migration
      * @return void
      */
     public function up()
-    {
-        Schema::create('colonnes', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('projet_id');
-            $table->string('titre');
-            $table->foreign('projet_id')->references('id')->on('projets')->onDelete('cascade');
-            $table->timestamps();
-        });
-    }
+{
+    Schema::create('colonnes', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('projet_id');
+        $table->string('titre');
+        $table->integer('numero_ordre')->unsigned();
+        $table->foreign('projet_id')->references('id')->on('projets')->onDelete('cascade');
+        $table->timestamps();
+    });
+}
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('colonnes');
-    }
+public function down()
+{
+    Schema::dropIfExists('colonnes');
+}
+
 };

@@ -92,7 +92,8 @@
         <div class="flex  items-start space-x-2">
 
             <div v-for="(colonne, colonneIndex) in colonnes" :key="colonneIndex"
-                class="flex-shrink-0 relative w-64 border bg-gray-100 rounded-lg p-4">
+                :class="['flex-shrink-0 relative w-64 border bg-gray-100 rounded-lg p-4', { 'drop-target': isDropTarget(colonneIndex) }]"
+                @dragover="dragOver($event)" @drop="drop(colonneIndex)">
 
                 <!-- Nom de la colonne -->
 
@@ -201,20 +202,30 @@
                 </div>
 
                 <!-- Affichage des taches de la colonne -->
-
-                <div v-for="(tache, tacheIndex) in colonne.taches" :key="tache.id"
-                    class="bg-white flex justify-between relative rounded-lg shadow-md p-4 mb-4">
-                    <p class="text-gray-800">{{ tache.name }}</p>
-                    <div class="group">
-                        <Icons name="three" class="cursor-pointer opacity-0 group-hover:opacity-100"
-                            @click="toggleTacheDropdown(colonneIndex, tacheIndex)" />
-                        <div v-if="showTacheDropdown[colonneIndex][tacheIndex]" ref="dropdown[colonneIndex][tacheIndex]"
-                            class="dropdown absolute block right-4 top-12 bg-slate-300 p-1 w-[10rem] rounded z-50">
-                            <button @click="removeTache(tache.id)"
-                                class="hover:bg-slate-100 text-start w-full px-5 py-2">Supprimer</button>
+                <template v-if="colonne.taches.length > 0">
+                    <div v-for="(tache, tacheIndex) in colonne.taches" :key="tache.id"
+                        class="bg-white flex justify-between relative rounded-lg shadow-md p-4 mb-4" draggable="true"
+                        @dragstart="dragStart(colonneIndex, tacheIndex)" @dragover="dragOver($event)"
+                        @drop="drop(colonneIndex, tacheIndex)">
+                        <p class="text-gray-800">{{ tache.name }}</p>
+                        <div class="group">
+                            <Icons name="three" class="cursor-pointer opacity-0 group-hover:opacity-100"
+                                @click="toggleTacheDropdown(colonneIndex, tacheIndex)" />
+                            <div v-if="showTacheDropdown[colonneIndex][tacheIndex]" ref="dropdown[colonneIndex][tacheIndex]"
+                                class="dropdown absolute block right-4 top-12 bg-slate-300 p-1 w-[10rem] rounded z-50">
+                                <button @click="removeTache(tache.id)"
+                                    class="hover:bg-slate-100 text-start w-full px-5 py-2">Supprimer</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </template>
+                <!-- <template v-else>
+                    <div draggable="true" @dragstart="dragStart(colonneIndex, tacheIndex)" @dragover="dragOver($event)"
+                        @drop="drop(colonneIndex, tacheIndex)"
+                        class="bg-white border-dashed border-2 border-gray-300 rounded-lg  mb-4 text-center text-gray-500">
+                        Faites glisser une tâche ici
+                    </div>
+                </template> -->
 
 
             </div>
@@ -248,32 +259,81 @@
 
 
         <div class="fixed right-5 bottom-4 flex flex-col gap-2">
-            <div>
 
-                <button @click="openConversationModal"
-                    class="bg-gradient-to-r from-blue-500 to-blue-700  text-white px-4 py-2 rounded-md flex items-center gap-2">
-                    <Icons name="conversation" />
-                    <span>Conversation</span>
-                </button>
 
-                <div v-if="isConversationModalOpen"
-                    class="fixed inset-0  bg-gray-900 bg-opacity-50 flex items-center justify-center ">
-                    <div class="bg-white rounded-lg p-4 mx-auto w-full  md:max-w-sm lg:max-w-5xl xl:max-w-6xl h-96">
-                        <h2 class="text-xl font-bold mb-4">Boîte de messagerie</h2>
-                        <div class="h-full bg-gray-100 rounded-lg overflow-y-auto">
-                            <!-- Contenu de la boîte de messagerie -->
+            <button @click="openConversationModal"
+                class="bg-gradient-to-r from-blue-500 to-blue-700  text-white px-4 py-2 rounded-md flex items-center gap-2">
+                <Icons name="conversation" />
+                <span>Conversation</span>
+            </button>
+
+            <!-- <button class="bg-teal-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
+                <Icons name="commentaire" />
+                <span>Commentaire</span>
+            </button> -->
+        </div>
+
+        <div v-if="isConversationModalOpen" class="fixed inset-0 bg-gray-800 opacity-50 z-50"></div>
+        <div v-if="isConversationModalOpen" class="fixed inset-0 flex items-center justify-center z-50 ">
+            <div class="bg-white rounded-lg p-4 mx-auto w-96 h-[35rem] relative">
+                <Icons @click="closeConversationModal" name="close" class="cursor-pointer absolute right-4" />
+                <h2 class="text-xl font-bold mb-4">Boîte de messagerie</h2>
+                <Icons name="reload" @click="showMessages" class="cursor-pointer absolute top-5 right-24 rounded-full  hover:bg-teal-100" />
+                <div class="h-full bg-gray-100 rounded-lg overflow-y-scroll pb-[4rem]">
+                    <!-- Contenu de la boîte de messagerie -->
+                    <div>
+                        <div v-for="message in messages" :key="message.id" class="mx-2 my-1"
+                            :class="{ 'ml-[8rem] ': message.user.id === connectedUserId, 'message-left': message.user.id !== connectedUserId }">
+                            <div>
+
+
+                                <div
+                                    :class="{ 'flex flex-row-reverse gap-2': message.user.id === connectedUserId, 'flex gap-2': message.user.id !== connectedUserId }">
+
+
+                                    <div class=""
+                                        :class="{ 'bg-gradient-to-r from-blue-500 to-blue-700  text-white p-2 rounded-md  flex flex-col': message.user.id === connectedUserId, ' bg-teal-600  text-white p-2 rounded-md  flex flex-col': message.user.id !== connectedUserId }">
+                                        <span
+                                            :class="{ 'hidden': message.user.id === connectedUserId, '  text-[.6rem] text-white': message.user.id !== connectedUserId }">{{
+                                                message.user.name }}</span>
+                                        <p class="flex flex-wrap">{{ message.content }}</p>
+                                        <span class="text-[.5rem] text-end">{{ message.created_time }}</span>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
+
+
+                    <div class="absolute -bottom-7 w-[22rem]">
+                        <label for="chat" class="sr-only">Votre méssage</label>
+                        <div class="flex items-center px-3 py-2 rounded-lg bg-gray-50 dark:bg-gray-700">
+                            <button type="button"
+                                class="inline-flex justify-center p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                <Icons name="image" />
+                                <span class="sr-only">Télécharger image</span>
+                            </button>
+                            <button type="button"
+                                class="p-2 text-gray-500 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                <Icons name="emojie" />
+                                <span class="sr-only">Ajouter emoji</span>
+                            </button>
+
+                            <textarea id="chat" rows="1" v-model="newMessage"
+                                class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Votre message..."></textarea>
+
+                            <button type="submit" @click="sendMessage"
+                                class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                                <Icons name="send" />
+                                <span class="sr-only">Envoyer message</span>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-
-
             </div>
-
-            <button class="bg-teal-600 text-white px-4 py-2 rounded-md flex items-center gap-2">
-                <Icons name="commentaire" />
-                <span>Commentaire</span>
-            </button>
         </div>
 
     </AuthenticatedLayout>
@@ -309,15 +369,130 @@ const membres = ref(props.membres);
 
 const colonnes = ref(props.colonnes);
 
+
+/***************************************** */
+
+let dragData = ref(null);
+
+const dragOver = (event) => {
+    event.preventDefault();
+};
+
+
+const dragStart = (colonneIndex, tacheIndex) => {
+    dragData.value = { colonneIndex, tacheIndex };
+};
+
+const drop = async (targetColonneIndex, targetTacheIndex) => {
+    if (dragData.value) {
+        const { colonneIndex, tacheIndex } = dragData.value;
+        const tacheToMove = colonnes.value[colonneIndex].taches[tacheIndex];
+
+        // Mettre à jour la colonne_id de la tâche déplacée
+        tacheToMove.colonne_id = colonnes.value[targetColonneIndex].id;
+
+        // // Vérifier si la colonne cible est vide
+        // if (colonnes.value[targetColonneIndex].taches.length === 0) {
+        //     colonnes.value[targetColonneIndex].taches.push(tacheToMove);
+        // } else {
+        // }
+        // Déplacer la tâche vers la nouvelle colonne
+        colonnes.value[colonneIndex].taches.splice(tacheIndex, 1);
+        colonnes.value[targetColonneIndex].taches.splice(targetTacheIndex, 0, tacheToMove);
+
+        dragData.value = null; // Réinitialiser la variable après le déplacement
+        console.log(tacheToMove.id);
+        console.log(tacheToMove.colonne_id);
+        console.log(props.projet.id);
+
+
+
+        // Effectuer la requête pour mettre à jour la tâche dans le backend
+        await axios.post(route('tache.colonneUpdate', {
+            projet_id: props.projet.id,
+            tache_id: tacheToMove.id,
+            colonne_id: tacheToMove.colonne_id
+
+        })).then(response => {
+            colonnes.value = response.data;
+        });
+
+    }
+};
+
+const isDropTarget = (colonneIndex) => {
+    if (dragData.value && dragData.value.colonneIndex !== colonneIndex) {
+        return true;
+    }
+    return false;
+};
+
+
+/***************************************** */
+
+const connectedUserId = ref('');
+const newMessage = ref('');
+const messages = ref([]);
+
+function sendMessage() {
+    axios.post(route('message.store',
+        {
+            content: newMessage.value,
+            projet_id: props.projet.id
+        })).then(response => {
+            console.log(response.data);
+            messages.value = response.data.messages;
+            connectedUserId.value = response.data.connectedUserId;
+        })
+        newMessage.value= "";
+}
+
+const showMessages = () => {
+    axios.post(route('message.index', {
+        projet_id: props.projet.id
+    })).then(response => {
+        console.log(response.data);
+        messages.value = response.data.messages
+        connectedUserId.value = response.data.connectedUserId
+
+    });
+};
+
+onMounted(() => {
+    showMessages();
+});
+
+// window.Echo.channel('messages')
+//     .listen('.read.message', e => {
+//         messages.value = e.messages;
+//     })
+
+
+
+
+
 const selectedCard = ref(null);
 const newColumnTitle = ref('');
 
+
 // Permet d'afficher le modale pour la conversation entre les membres du projet
-const isConversationModalOpen = ref(false);
+
+const isConversationModalOpen = ref(localStorage.getItem('isConversationModalOpen') === 'true' || false);
 
 const openConversationModal = () => {
-    isConversationModalOpen.value = true;
+  isConversationModalOpen.value = true;
+  localStorage.setItem('isConversationModalOpen', 'true');
 };
+
+const closeConversationModal = () => {
+  isConversationModalOpen.value = false;
+  localStorage.setItem('isConversationModalOpen', 'false');
+};
+
+onBeforeUnmount(() => {
+  localStorage.removeItem('isConversationModalOpen');
+});
+
 
 // Permet d'afficher les dropdown au niveau des colonne pour le renommage et la suppression 
 
@@ -360,7 +535,7 @@ const renameColonne = (colonneIndex) => {
     axios.post(route('column.update', {
         colonne_id: colonne_id,
         projet_id: props.projet.id,
-        newColumnName : newColumnName.value,
+        newColumnName: newColumnName.value,
     })).then(response => {
         colonnes.value = response.data;
         newColumnName.value = '';
@@ -370,9 +545,9 @@ const renameColonne = (colonneIndex) => {
 };
 
 
- const closeRenameModal = () => {
-      showRenameModal.value = false;
-    };
+const closeRenameModal = () => {
+    showRenameModal.value = false;
+};
 
 
 let success = ref('');

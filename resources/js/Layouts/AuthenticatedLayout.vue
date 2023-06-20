@@ -17,10 +17,18 @@ function toggleUserDropdown() {
     showUserDropdown.value = !showUserDropdown.value;
 }
 
-const isSidebarOpen = ref(true);
+// Vérifier si des préférences sont déjà enregistrées dans le localStorage
+const storedSidebarState = localStorage.getItem('sidebarState');
+
+// Définir l'état initial de l'aside nav en fonction de la valeur stockée ou par défaut
+const isSidebarOpen = ref(storedSidebarState ? JSON.parse(storedSidebarState) : true);
 
 function toggleSidebar() {
-    isSidebarOpen.value = !isSidebarOpen.value;
+  // Inverser la valeur de l'état de l'aside nav
+  isSidebarOpen.value = !isSidebarOpen.value;
+  
+  // Enregistrer la nouvelle valeur dans le localStorage
+  localStorage.setItem('sidebarState', JSON.stringify(isSidebarOpen.value));
 }
 
 const sidebarClasses = computed(() => {
@@ -189,14 +197,14 @@ function removeProjet(id, name) {
                             class="flex items-center p-2 my-1 truncate text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                             @mouseover="showDeleteButton = true" @mouseout="showDeleteButton = false">
                             <span
-                                class="border w-6 h-6 bg-teal-600 text-white flex justify-center items-center rounded-full">{{
+                                class="border w-6 h-6 bg-teal-600 text-white flex justify-center items-center rounded">{{
                                     projet.name[0] }}</span>
 
                             <span v-if="isSidebarOpen" class="flex-1 ml-3 whitespace-nowrap hidden sm:flex">{{ projet.name
                             }}</span>
 
                         </NavLink>
-                        <div class="group">
+                        <div class="group" v-if="isSidebarOpen">
                             <Icons name="delete" class="cursor-pointer opacity-0 group-hover:opacity-100"
                                 @click="removeProjet(projet.id, projet.name)" />
 

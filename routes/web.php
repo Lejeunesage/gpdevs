@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\MembreProjetController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TacheController;
 use Illuminate\Foundation\Application;
@@ -58,6 +59,12 @@ Route::post('/column/destroy', [ColonneController::class, 'destroy'])->name('col
 // Tâche
 Route::post('/tache/store', [TacheController::class, 'store'])->name('tache.store')->middleware('auth');
 Route::post('/tache/destroy', [TacheController::class, 'destroy'])->name('tache.destroy')->middleware('auth');
+Route::post('/tache/colonneUpdate', [TacheController::class, 'colonneUpdate'])->name('tache.colonneUpdate')->middleware('auth');
+
+
+// Message
+Route::post('/message/index', [MessageController::class, 'getMessages'])->name('message.index')->middleware('auth');
+Route::post('/message/store', [MessageController::class, 'store'])->name('message.store')->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {

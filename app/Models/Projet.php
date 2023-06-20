@@ -20,9 +20,13 @@ class Projet extends Model
      * defines the relationship with membre_equipe
      */
 
-     public function membre_equipe()
-     {
+    public function membre_equipe()
+    {
         return $this->hasMany(MembreEquipe::class);
-     }
+    }
 
+    public function colonnes()
+    {
+        return $this->hasMany(Colonne::class);
+    }
 }
