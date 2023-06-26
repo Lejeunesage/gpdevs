@@ -471,6 +471,10 @@ onMounted(() => {
 
 
 
+
+
+
+
 const selectedCard = ref(null);
 const newColumnTitle = ref('');
 

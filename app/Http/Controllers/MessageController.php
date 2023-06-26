@@ -7,6 +7,8 @@ use App\Models\Message;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\Mailer\Event\MessageEvent as EventMessageEvent;
+use Symfony\Component\Mailer\Event\MessageEvents;
 
 class MessageController extends Controller
 {
@@ -107,7 +109,7 @@ class MessageController extends Controller
             });
 
 
-            MessageEvent::dispatch($messages);
+          
 
             return response($messages);
         } catch (\Throwable $th) {
