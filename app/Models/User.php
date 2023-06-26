@@ -40,11 +40,5 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
-
-    public function membreProjets()
-    {
-        return $this->belongsToMany(MembreProjet::class, 'membre_projets', 'user_id', 'projet_id');
-    }
 }

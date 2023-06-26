@@ -7,6 +7,8 @@ use App\Models\MembreProjet;
 use App\Models\Projet;
 use App\Models\Tache;
 use App\Models\User;
+use BeyondCode\LaravelWebSockets\Apps\AppProvider;
+use BeyondCode\LaravelWebSockets\Dashboard\DashboardLogger;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -147,7 +149,7 @@ class ProjetController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(AppProvider $appProvider, $id)
     {
         $projet = Projet::findOrFail($id);
 
@@ -159,7 +161,7 @@ class ProjetController extends Controller
             ->get();
 
 
-            $colonnes = Colonne::where('projet_id', $id)
+        $colonnes = Colonne::where('projet_id', $id)
             ->with('taches')
             ->orderBy('numero_ordre', 'asc')
             ->get()
@@ -172,7 +174,7 @@ class ProjetController extends Controller
                         $projet = Projet::find($tache->projet_id);
                         $user = User::find($tache->user_id);
                         $colonneName = $colonne->titre ?? null;
-        
+
                         return [
                             'id' => $tache->id,
                             'name' => $tache->name,
@@ -200,6 +202,11 @@ class ProjetController extends Controller
             'projet' => $projet,
             'membres' => $membres,
             'colonnes' => $colonnes,
+            'host' => env('LARAVEL_WEBSOCKETS_HOST'),
+            'port' => env('LARAVEL_WEBSOCKETS_PORT'),
+            'authEndpoint' => "/api/sockets/connect",
+            'logChannel' => DashboardLogger::LOG_CHANNEL_PREFIX,
+            'apps' => $appProvider->all()
         ]);
     }
 

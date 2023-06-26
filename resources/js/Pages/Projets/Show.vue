@@ -278,8 +278,9 @@
             <div class="bg-white rounded-lg p-4 mx-auto w-96 h-[35rem] relative">
                 <Icons @click="closeConversationModal" name="close" class="cursor-pointer absolute right-4" />
                 <h2 class="text-xl font-bold mb-4">Boîte de messagerie</h2>
-                <Icons name="reload" @click="showMessages" class="cursor-pointer absolute top-5 right-24 rounded-full  hover:bg-teal-100" />
-                <div class="h-full bg-gray-100 rounded-lg overflow-y-scroll pb-[4rem]">
+                <Icons name="reload" @click="showMessages"
+                    class="cursor-pointer absolute top-5 right-24 rounded-full  hover:bg-teal-100" />
+                <div class="h-full bg-gray-100 rounded-lg overflow-y-scroll pb-[5rem]">
                     <!-- Contenu de la boîte de messagerie -->
                     <div>
                         <div v-for="message in messages" :key="message.id" class="mx-2 my-1"
@@ -348,6 +349,26 @@ import { router } from '@inertiajs/vue3'
 import axios from 'axios';
 import { rose } from 'tailwindcss/colors';
 
+import Echo from 'laravel-echo';
+
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: 'mt1',
+    wsHost: '127.0.0.1',
+    wsPort: 6001,
+    wssPort: 6001,
+    forceTLS: false,
+    // enabledTransports: ['ws', 'wss'],
+});
+
+// Établir la connexion avec Pusher
+window.Echo.connect();
+
+
 let props = defineProps({
     projet: {
         type: Array,
@@ -364,6 +385,7 @@ let props = defineProps({
 
 
 });
+
 
 const membres = ref(props.membres);
 
@@ -428,7 +450,6 @@ const isDropTarget = (colonneIndex) => {
 };
 
 
-/***************************************** */
 
 const connectedUserId = ref('');
 const newMessage = ref('');
@@ -440,11 +461,12 @@ function sendMessage() {
             content: newMessage.value,
             projet_id: props.projet.id
         })).then(response => {
-            console.log(response.data);
-            messages.value = response.data.messages;
-            connectedUserId.value = response.data.connectedUserId;
+            // console.log(response.data);
+            // messages.value = response.data.messages;
+            // connectedUserId.value = response.data.connectedUserId;
+            newMessage.value = "";
         })
-        newMessage.value= "";
+
 }
 
 const showMessages = () => {
@@ -462,10 +484,14 @@ onMounted(() => {
     showMessages();
 });
 
-// window.Echo.channel('messages')
-//     .listen('.read.message', e => {
-//         messages.value = e.messages;
-//     })
+// setInterval(showMessages, 5000);
+
+
+window.Echo.channel('messages')
+    .listen('.read.message', e => {
+        messages.value = e.messages;
+    })
+// console.log(window.Echo.connector.pusher.connection)   
 
 
 
@@ -484,17 +510,17 @@ const newColumnTitle = ref('');
 const isConversationModalOpen = ref(localStorage.getItem('isConversationModalOpen') === 'true' || false);
 
 const openConversationModal = () => {
-  isConversationModalOpen.value = true;
-  localStorage.setItem('isConversationModalOpen', 'true');
+    isConversationModalOpen.value = true;
+    localStorage.setItem('isConversationModalOpen', 'true');
 };
 
 const closeConversationModal = () => {
-  isConversationModalOpen.value = false;
-  localStorage.setItem('isConversationModalOpen', 'false');
+    isConversationModalOpen.value = false;
+    localStorage.setItem('isConversationModalOpen', 'false');
 };
 
 onBeforeUnmount(() => {
-  localStorage.removeItem('isConversationModalOpen');
+    localStorage.removeItem('isConversationModalOpen');
 });
 
 

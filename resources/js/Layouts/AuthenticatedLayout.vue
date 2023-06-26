@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Icons from '@/Components/Icons/Icons.vue';
+import Icons from '@/Components/Icons/Icons.vue'
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
@@ -55,7 +55,7 @@ const move = computed(() => {
     return {
         'p-4': true,
         'ml-[15rem]': true,
-        'sm:ml-[5rem]': !isSidebarOpen.value,
+        'ml-[5rem]': !isSidebarOpen.value,
     };
 });
 
@@ -135,6 +135,12 @@ function removeProjet(id, name) {
                     <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{ $page.props.auth.user.email
                     }}</span>
                 </div>
+                <div class="mt-3 space-y-1">
+                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
+                                Log Out
+                            </ResponsiveNavLink>
+                        </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
 
 

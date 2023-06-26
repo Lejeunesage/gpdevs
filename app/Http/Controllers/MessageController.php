@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageEvent;
+use App\Events\MessagesEvent;
 use App\Models\Message;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -108,6 +109,7 @@ class MessageController extends Controller
                 ];
             });
 
+            MessagesEvent::dispatch($messages);
 
           
 
